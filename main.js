@@ -12,8 +12,23 @@
     const boostFill = document.getElementById("boost-fill");
     const bestLabel = document.getElementById("best-score");
     const dialogEmoji = document.getElementById("dialog-emoji");
+    const dialogPhoto = document.getElementById("dialog-photo");
     const dialogTitle = document.getElementById("dialog-title");
     const dialogText = document.getElementById("dialog-text");
+    const titleSticker = document.querySelector(".title-sticker");
+    const azizaImage = new Image();
+    azizaImage.src = "./aziza.jpg";
+    const cobaltImage = new Image();
+    cobaltImage.src = "./cobalt.jpg";
+
+    function hideImageOnError(image, container) {
+        const hide = () => { container.hidden = true; };
+        image.addEventListener("error", hide, { once: true });
+        if (image.complete && !image.naturalWidth) hide();
+    }
+
+    hideImageOnError(titleSticker, titleSticker.closest(".title-sticker-frame"));
+    hideImageOnError(dialogPhoto, dialogPhoto);
 
     const laneCount = 3;
     const maxBoost = 100;
@@ -78,6 +93,7 @@
 
     function showOverlay(kind) {
         overlay.classList.remove("hidden");
+        dialogPhoto.hidden = true;
         if (kind === "ready") {
             dialogEmoji.textContent = "🌷";
             dialogTitle.textContent = "Sayohatga tayyormisan?";
@@ -89,8 +105,9 @@
             dialogText.textContent = "Sayohating shu yerda kutib turibdi. Tayyor bo‘lsang davom et!";
             startButton.textContent = "Davom etish ▶";
         } else {
+            dialogPhoto.hidden = lives > 0;
             dialogEmoji.textContent = lives > 0 ? "🎉" : "💖";
-            dialogTitle.textContent = lives > 0 ? "Ajoyib sayohat!" : "Yana bir bor urinib ko‘r!";
+            dialogTitle.textContent = lives > 0 ? "Ajoyib sayohat!" : "Yana bir bor urinib ko‘r AZIZA   !";
             dialogText.textContent = ` ${Math.floor(distance)} metr yo‘l bosding va ${score} ta yulduz yig‘ding. ${score > best ? "Yangi rekord! Sen zo‘rsan!" : "Keyingi safar yanada uzoqqa borasan!"}`;
             startButton.textContent = "Qayta o‘ynash ↻";
         }
@@ -314,6 +331,25 @@
         ctx.restore();
     }
 
+    function drawCobalt(x, y, carWidth, carHeight) {
+        const radius = Math.min(9, carHeight * 0.2);
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(x + radius, y);
+        ctx.lineTo(x + carWidth - radius, y);
+        ctx.quadraticCurveTo(x + carWidth, y, x + carWidth, y + radius);
+        ctx.lineTo(x + carWidth, y + carHeight - radius);
+        ctx.quadraticCurveTo(x + carWidth, y + carHeight, x + carWidth - radius, y + carHeight);
+        ctx.lineTo(x + radius, y + carHeight);
+        ctx.quadraticCurveTo(x, y + carHeight, x, y + carHeight - radius);
+        ctx.lineTo(x, y + radius);
+        ctx.quadraticCurveTo(x, y, x + radius, y);
+        ctx.closePath();
+        ctx.clip();
+        ctx.drawImage(cobaltImage, 35, 330, 880, 650, x, y, carWidth, carHeight);
+        ctx.restore();
+    }
+
     function drawCar() {
         const x = player.x;
         const y = player.y;
@@ -329,6 +365,13 @@
             ctx.beginPath();
             ctx.ellipse(0, 0, 32, 45, 0, 0, Math.PI * 2);
             ctx.fill();
+        }
+        if (cobaltImage.complete && cobaltImage.naturalWidth) {
+            const carWidth = Math.min(72, Math.max(48, roadWidth() / laneCount * 0.58));
+            const carHeight = carWidth * 0.74;
+            drawCobalt(-carWidth / 2, -carHeight / 2, carWidth, carHeight);
+            ctx.restore();
+            return;
         }
         ctx.fillStyle = "#584752";
         ctx.fillRect(-22, -19, 7, 16);
@@ -375,12 +418,35 @@
         ctx.restore();
     }
 
+    function drawCollectible(x, y) {
+        const size = Math.min(52, Math.max(40, width * 0.09));
+        if (!azizaImage.complete || !azizaImage.naturalWidth) {
+            drawStar(x, y, size * 0.34, 0);
+            return;
+        }
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.fillStyle = "#00000030";
+        ctx.beginPath();
+        ctx.ellipse(0, size * 0.55, size * 0.48, size * 0.18, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.52, 0, Math.PI * 2);
+        ctx.fillStyle = "#fff";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.46, 0, Math.PI * 2);
+        ctx.clip();
+        ctx.drawImage(azizaImage, 150, 145, 200, 200, -size * 0.46, -size * 0.46, size * 0.92, size * 0.92);
+        ctx.restore();
+    }
+
     function draw() {
         if (!width || !height) return;
         drawBackground();
         objects.forEach((item) => {
             const x = laneCenter(item.lane, item.y);
-            if (item.type === "star") drawStar(x, item.y, 14, item.spin);
+            if (item.type === "star") drawCollectible(x, item.y);
             else drawHazard(item, x);
         });
         drawCar();

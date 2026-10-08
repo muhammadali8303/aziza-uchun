@@ -16,6 +16,8 @@
         .brand { display: flex; align-items: center; gap: 12px; }
         .brand-icon { width: 48px; height: 48px; border-radius: 16px; display: grid; place-items: center; background: #ffe1ef; font-size: 25px; box-shadow: inset 0 0 0 1px #ffd0e5; }
         h1 { margin: 0; font-size: clamp(21px, 4vw, 28px); line-height: 1.1; font-weight: 900; letter-spacing: -.7px; }
+        .title-sticker-frame { display: inline-flex; width: 76px; height: 68px; margin-left: 5px; overflow: hidden; vertical-align: middle; border: 2px solid white; border-radius: 20px; background: linear-gradient(145deg, #ffe8f2, #f8d4e5); box-shadow: 0 5px 12px #ad648b40; }
+        .title-sticker { width: 100%; height: 100%; flex: 0 0 auto; object-fit: cover; object-position: center top; transform: scale(1.35); transform-origin: center top; }
         .subtitle { margin-top: 4px; font-size: 13px; color: #917e95; font-weight: 700; }
         .best-pill { padding: 10px 16px; border-radius: 999px; background: white; color: #88677c; font-size: 13px; font-weight: 800; box-shadow: 0 5px 18px #b8749220; }
         .best-pill span { color: #e95391; }
@@ -33,6 +35,8 @@
         .overlay { position: absolute; inset: 0; display: grid; place-items: center; padding: 20px; background: #fff8f3a8; backdrop-filter: blur(5px); transition: opacity .2s; }
         .overlay.hidden { opacity: 0; pointer-events: none; }
         .dialog { width: min(390px, 100%); padding: 27px 30px 25px; text-align: center; background: #fffdf9; border: 1px solid white; border-radius: 26px; box-shadow: 0 16px 45px #74485c29; }
+        .dialog-photo { display: block; width: 104px; height: 92px; margin: 0 auto 9px; border: 4px solid white; border-radius: 24px; object-fit: cover; object-position: center 24%; box-shadow: 0 7px 18px #ad648b40; transform: rotate(-3deg); }
+        .dialog-photo[hidden] { display: none; }
         .dialog-emoji { font-size: 43px; line-height: 1; }
         .dialog h2 { margin: 10px 0 7px; font-size: 25px; font-weight: 900; color: #50384f; }
         .dialog p { margin: 0 auto 18px; max-width: 290px; color: #927f8c; font-size: 14px; line-height: 1.55; font-weight: 700; }
@@ -50,6 +54,8 @@
             .page { padding: 16px 13px 12px; }
             header { margin-bottom: 12px; }
             .brand-icon { width: 41px; height: 41px; font-size: 21px; border-radius: 14px; }
+            h1 { font-size: clamp(18px, 5vw, 21px); }
+            .title-sticker-frame { width: 62px; height: 58px; margin-left: 3px; border-radius: 17px; }
             .subtitle { font-size: 11px; }
             .best-pill { padding: 8px 11px; font-size: 11px; }
             .game-shell { height: min(67vh, 600px); min-height: 370px; border-width: 5px; border-radius: 22px; }
@@ -61,6 +67,7 @@
             .mobile-controls { display: flex; }
             .footer { padding-top: 10px; font-size: 10px; }
             .dialog { padding: 23px 22px 21px; }
+            .dialog-photo { width: 90px; height: 78px; }
         }
         @media (max-height: 650px) and (min-width: 621px) {
             .page { padding-top: 13px; padding-bottom: 12px; }
@@ -76,7 +83,7 @@
             <div class="brand">
                 <div class="brand-icon" aria-hidden="true">🚗</div>
                 <div>
-                    <h1>Yulduzli yo‘l</h1>
+                    <h1>Aziza uchun <span class="title-sticker-frame"><img class="title-sticker" src="./sticker.webp" alt="" aria-hidden="true"></span></h1>
                     <div class="subtitle">Gullar shahri bo‘ylab quvnoq sayohat</div>
                 </div>
             </div>
@@ -95,8 +102,9 @@
             </div>
             <div class="overlay" id="overlay">
                 <div class="dialog">
+                    <img class="dialog-photo" id="dialog-photo" src="./tomtom.jpg" alt="Tomtom" hidden>
                     <div class="dialog-emoji" id="dialog-emoji">🌷</div>
-                    <h2 id="dialog-title">Sayohatga tayyormisan?</h2>
+                    <h2 id="dialog-title">Sayohatga tayyormisan AZIZA?</h2>
                     <p id="dialog-text">Shirin mashinangni boshqar, yo‘ldagi to‘siqlardan qoch va yulduzlarni yig‘!</p>
                     <button class="play-button" id="start-button">Boshladik! ✨</button>
                     <div class="hint">Harakat: <kbd>←</kbd> <kbd>→</kbd> yoki <kbd>A</kbd> <kbd>D</kbd><br>Kuchaytirgich: <kbd>Bo‘sh joy</kbd> · Pauza: <kbd>P</kbd></div>
@@ -105,7 +113,7 @@
         </section>
         <div class="mobile-controls" aria-label="O‘yin boshqaruvi">
             <button class="control-button" id="left-button" aria-label="Chapga">◀</button>
-            <button class="control-button boost" id="boost-button">✨ TURBO</button>
+            <button class="control-button boost" id="boost-button">✨ SUPER AZIZA KUCHI</button>
             <button class="control-button" id="right-button" aria-label="O‘ngga">▶</button>
         </div>
         <footer class="footer"><span>⭐ Yulduzlarni yig‘</span><span>·</span><span>🚧 To‘siqlardan qoch</span><span>·</span><span><b>✨ 5 ta yulduz = turbo!</b></span></footer>
